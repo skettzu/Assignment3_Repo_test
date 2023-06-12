@@ -42,6 +42,21 @@ int main(int argc, char** argv)
 	char* messageError;
 	string query;
 	
+	int user_opt = 10;
+
+	while (user_opt != 0) {
+		cout << "1 - Search" << endl;
+		cout << "2 - Insert" << endl;
+		cout << "3 - Print All" << endl;
+		cout << "4 - Create Table" << endl;
+		cout << "5 - Update" << endl;
+		cout << "6 - Remove" << endl;
+
+		if (user_opt == 1) {
+			cout << "Search for: ";
+
+		}
+	}
 	/*Call command course queries the database for the list of class names and corresponding times*/
 
 	string course = "SELECT Title, time FROM COURSES;";
