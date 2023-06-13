@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 /*************************************************************************************************
  The callback() function is invoked for each result row coming out of the evaluated SQL statement
  1st argument - the 4th argument provided by sqlite3_exec() and is typically not used
@@ -44,6 +45,7 @@ int main(int argc, char** argv)
 	
 	int user_opt = 10;
 
+	// Start of functions menu
 	while (user_opt != 0) {
 		cout << endl << "1 - Search" << endl;
 		cout << "2 - Insert" << endl;
@@ -293,7 +295,13 @@ int main(int argc, char** argv)
 			cout << "Invalid Choice!" << endl;
 		}
 	}
-	return 0;
+
+	/* 
+	Linking courses to instructor
+	Will add this as an option in final integration
+	Separate test for now 
+	*/
+
 	/*Call command course queries the database for the list of class names and corresponding times*/
 
 	string course = "SELECT Title, time FROM COURSES;";
@@ -348,8 +356,10 @@ int main(int argc, char** argv)
 	if (exit != SQLITE_OK) {
 		cout << "error";
 	}
-	
+
 
 	sqlite3_close(DB);		// closes the database
 	return 0;
 }
+
+
