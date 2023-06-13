@@ -85,6 +85,7 @@ int main(int argc, char** argv)
 				string search_student = "SELECT * FROM STUDENT WHERE NAME = '" + student_name + "';";
 				exit = sqlite3_exec(DB, search_student.c_str(), callback, NULL, NULL);
 			}
+			else cout << "Invalid Input" << endl;
 			/*
 			if (exit != SQLITE_OK) {
 				cout << "Search Error" << endl;
@@ -94,20 +95,54 @@ int main(int argc, char** argv)
 
 		// Insert element option
 		else if (user_opt == 2) {
-			string CRN, time, year, credit;
-			string course_name, dept, day, semester;
-			cin.ignore();
-			cout << "Enter CRN, course name, department, time, day, semester, year and credit" << endl;
-			cin >> CRN >> course_name >> dept >> time >> day >> semester >> year >> credit;
+			int insert_opt;
+			cout << "1 - Insert course\n2 - Insert student\n3 - Insert instructor\n4 - Insert admin" << endl;
+			cout << "Enter your option: ";
+			cin >> insert_opt;
 
+			if (insert_opt == 1) {
+				string CRN, time, year, credit;
+				string course_name, dept, day, semester;
+				cin.ignore();
+				cout << "Enter CRN, course name, department, time, day, semester, year and credit" << endl;
+				cin >> CRN >> course_name >> dept >> time >> day >> semester >> year >> credit;
 
+				string courseInsert = ("INSERT INTO COURSES VALUES(" + CRN + ",'" + course_name + "','" + dept + "'," + time + ",'" + day + "'," + semester + "," + year + "," + credit + ");");
+				//cout << courseInsert << endl;
+				sqlite3_exec(DB, courseInsert.c_str(), callback, NULL, NULL);
+			}
+			else if (insert_opt == 2) {
+				string id, name, surname, grad_year, major, email;
+				cin.ignore();
+				cout << "Enter ID, Name, Surname, Grad Year, Major and email of the student seperate by spaces: " << endl;
+				cin >> id >> name >> surname >> grad_year >> major >> email;
 
-			string userInsert = ("INSERT INTO COURSES VALUES(" + CRN + ",'" + course_name + "','" + dept + "'," + time + ",'" + day + "'," + semester + "," + year + "," + credit + ");");
-			cout << userInsert << endl;
-			exit = sqlite3_exec(DB, userInsert.c_str(), callback, NULL, NULL);
+				string studentInsert = ("INSERT INTO STUDENT VALUES(" + id + ", '" + name + "', '" + surname + "', " + grad_year + ",'" + major + "', '" + email + "'); ");
+				cout << studentInsert << endl;
+				sqlite3_exec(DB, studentInsert.c_str(), callback, NULL, NULL);
+			}
+			else if (insert_opt == 3) {
+				string id, prof_name, surname, title, hire_year, dept, email;
+				cin.ignore();
+				cout << "Enter ID, Name, Surname, Title, Hire Year, Department and Email of the Instructor seperated by spaces:" << endl;
+				cin >> id >> prof_name >> surname >> title >> hire_year >> dept >> email;
 
-			if (exit != SQLITE_OK) cout << "ERROR" << endl;
-			else cout << "Success" << endl;
+				string profInsert = ("INSERT INTO INSTRUCTOR VALUES(" + id + ", '" + prof_name + "', '" + surname + "', '" + title + "', " + hire_year + ", '" + dept + "', '" + email + "');");
+				cout << profInsert << endl;
+				sqlite3_exec(DB, profInsert.c_str(), callback, NULL, NULL);
+			}
+			else if (insert_opt == 4) {
+				string id, name, surname, title, office, email;
+				cin.ignore();
+				cout << "Enter ID, Name, Surname, Title, Office, and Email of the admin by spaces:" << endl;
+				cin >> id >> name >> surname >> title >> office >> email;
+
+				string adminInsert = ("INSERT INTO ADMIN VALUES(" + id + ", '" + name + "', '" + surname + "', '" + title + "', '" + office + "', '" + email + "');");
+				cout << adminInsert << endl;
+				sqlite3_exec(DB, adminInsert.c_str(), callback, NULL, NULL);
+			}
+			else cout << "Invalid Input" << endl;
+
 		}
 
 		// Print table option
@@ -138,6 +173,7 @@ int main(int argc, char** argv)
 				sqlite3_exec(DB, print_all.c_str(), callback, NULL, NULL);
 				//cout << print_all << endl;
 			}
+			else cout << "Invalid Input" << endl;
 		}
 
 		// Create table option
