@@ -51,9 +51,12 @@ int main(int argc, char** argv)
 		cout << "4 - Create Table" << endl;
 		cout << "5 - Update" << endl;
 		cout << "6 - Remove" << endl;
+		cout << "0 - Exit" << endl;
 
 		cin >> user_opt;
 		int search_opt;
+
+		// Search table option
 		if (user_opt == 1) {
 			cout << "1 - Search course" << endl;
 			cout << "2 - Search instructor" << endl;
@@ -87,6 +90,7 @@ int main(int argc, char** argv)
 			else cout << "Search Success" << endl; */
 		}
 
+		// Insert element option
 		else if (user_opt == 2) {
 			string CRN, time, year, credit;
 			string course_name, dept, day, semester;
@@ -104,6 +108,7 @@ int main(int argc, char** argv)
 			else cout << "Success" << endl;
 		}
 
+		// Print table option
 		else if (user_opt == 3) {
 			int print_opt;
 			cout << "1 - Print Course Table\n2 - Print Student Table\n3 - Print Instructor Table\n4 - Print Admin Table\n5 - Print All" << endl;
@@ -133,6 +138,7 @@ int main(int argc, char** argv)
 			}
 		}
 
+		// Create table option
 		else if (user_opt == 4) {
 			string title;
 			string table;
@@ -279,10 +285,15 @@ int main(int argc, char** argv)
 				cout << "Success" << std::endl;
 			}
 		}
+		else if (user_opt == 0) {
+			cout << "Exit success!" << endl;
+			break;
+		}
 		else {
 			cout << "Invalid Choice!" << endl;
 		}
 	}
+	return 0;
 	/*Call command course queries the database for the list of class names and corresponding times*/
 
 	string course = "SELECT Title, time FROM COURSES;";
