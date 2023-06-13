@@ -45,16 +45,242 @@ int main(int argc, char** argv)
 	int user_opt = 10;
 
 	while (user_opt != 0) {
-		cout << "1 - Search" << endl;
+		cout << endl << "1 - Search" << endl;
 		cout << "2 - Insert" << endl;
-		cout << "3 - Print All" << endl;
+		cout << "3 - Print" << endl;
 		cout << "4 - Create Table" << endl;
 		cout << "5 - Update" << endl;
 		cout << "6 - Remove" << endl;
 
+		cin >> user_opt;
+		int search_opt;
 		if (user_opt == 1) {
-			cout << "Search for: ";
+			cout << "1 - Search course" << endl;
+			cout << "2 - Search instructor" << endl;
+			cout << "3 - Search student" << endl;
+			cin >> search_opt;
 
+			if (search_opt == 1) {
+				string course_name;
+				cin >> course_name;
+				string search_course = ("SELECT * FROM COURSES WHERE Title = '" + course_name + "';");
+				cout << search_course << endl;
+				exit = sqlite3_exec(DB, search_course.c_str(), callback, NULL, NULL);
+
+			}
+			else if (search_opt == 2) {
+				string prof_name;
+				cin >> prof_name;
+				string search_prof = ("SELECT * FROM INSTRUCTOR WHERE NAME = '" + prof_name + "';");
+				exit = sqlite3_exec(DB, search_prof.c_str(), callback, NULL, NULL);
+			}
+			else if (search_opt == 3) {
+				string student_name;
+				cin >> student_name;
+				string search_student = "SELECT * FROM STUDENT WHERE NAME = '" + student_name + "';";
+				exit = sqlite3_exec(DB, search_student.c_str(), callback, NULL, NULL);
+			}
+			/*
+			if (exit != SQLITE_OK) {
+				cout << "Search Error" << endl;
+			}
+			else cout << "Search Success" << endl; */
+		}
+
+		else if (user_opt == 2) {
+			string CRN, time, year, credit;
+			string course_name, dept, day, semester;
+			cin.ignore();
+			cout << "Enter CRN, course name, department, time, day, semester, year and credit" << endl;
+			cin >> CRN >> course_name >> dept >> time >> day >> semester >> year >> credit;
+
+
+
+			string userInsert = ("INSERT INTO COURSES VALUES(" + CRN + ",'" + course_name + "','" + dept + "'," + time + ",'" + day + "'," + semester + "," + year + "," + credit + ");");
+			cout << userInsert << endl;
+			exit = sqlite3_exec(DB, userInsert.c_str(), callback, NULL, NULL);
+
+			if (exit != SQLITE_OK) cout << "ERROR" << endl;
+			else cout << "Success" << endl;
+		}
+
+		else if (user_opt == 3) {
+			int print_opt;
+			cout << "1 - Print Course Table\n2 - Print Student Table\n3 - Print Instructor Table\n4 - Print Admin Table\n5 - Print All" << endl;
+			cout << "Enter your option: ";
+			cin >> print_opt;
+			if (print_opt == 1) {
+				string print_course = "SELECT * FROM COURSES;";
+				//cout << print_all << endl;
+				sqlite3_exec(DB, print_course.c_str(), callback, NULL, NULL);
+			}
+			else if (print_opt == 2) {
+				string print_student = "SELECT * FROM STUDENT;";
+				sqlite3_exec(DB, print_student.c_str(), callback, NULL, NULL);
+			}
+			else if (print_opt == 3) {
+				string print_prof = "SELECT * FROM INSTRUCTOR;";
+				sqlite3_exec(DB, print_prof.c_str(), callback, NULL, NULL);
+			}
+			else if (print_opt == 4) {
+				string print_admin = "SELECT * FROM ADMIN;";
+				sqlite3_exec(DB, print_admin.c_str(), callback, NULL, NULL);
+			}
+			else if (print_opt == 5) {
+				string print_all = "SELECT * FROM COURSES; SELECT * FROM STUDENT;  SELECT * FROM INSTRUCTOR; SELECT * FROM ADMIN;";
+				sqlite3_exec(DB, print_all.c_str(), callback, NULL, NULL);
+				//cout << print_all << endl;
+			}
+		}
+
+		else if (user_opt == 4) {
+			string title;
+			string table;
+			string sql_query;
+			int attr = 0;
+			int usr_attr;
+			// Inquires User how many attributes they want their table to have
+			cout << "How many attributes does your table have?" << endl;
+			cin >> usr_attr;
+			cout << "What is the title of your table?" << endl;
+			cin >> title;
+			table = "CREATE TABLE " + title + "(";
+			// Asks users to input attributes with corresponding inputs until attribute size is reached
+			while (attr < usr_attr) {
+				// temp and temp_d are temporary variables storing user inputs
+				string temp;
+				string temp_d;
+				cout << "Enter an attribute: " << endl;
+				// On first iteration clear the pending buffer from previous cins
+				if (attr == 0) {
+					cin.ignore();
+				}
+				getline(cin, temp);
+				// starts building sql command starting with attribute name
+				sql_query = temp;
+				temp = "";
+				cout << "Enter data type(INTEGER,TEXT): " << endl;
+				getline(cin, temp);
+				sql_query = sql_query + " " + temp;
+				cout << "Primary Key?(Y/N): " << endl;
+				getline(cin, temp_d);
+				// asks if is primary key
+				if (temp_d == "Y") {
+					sql_query = sql_query + " PRIMARY KEY,";
+				}
+				else if (temp_d == "N") {
+					cout << "NULL or NOT NULL? " << endl;
+					getline(cin, temp);
+					// checks if it is last attribute to terminate the table string with right bracket
+					if (attr == usr_attr - 1) {
+						sql_query = sql_query + " " + temp + "); ";
+					}
+					else {
+						sql_query = sql_query + " " + temp + ", ";
+					}
+				}
+				attr++;
+				// clear temp variables
+				temp = "";
+				temp_d = "";
+				// add current sql attribute to table 
+				table = table + sql_query;
+			}
+			// prints final table string
+			cout << table << endl;
+			exit = sqlite3_exec(DB, table.c_str(), NULL, 0, &messageError);	// calls callback since there could be multiple rows
+
+			if (exit != SQLITE_OK)
+			{
+				std::cerr << "Error Create Table" << std::endl;
+				sqlite3_free(messageError);
+			}
+			else {
+				cout << "Table created Successfully" << std::endl;
+			}
+			/*
+			for (int i = 0; i < attr_num; i++) {
+				string temp_element;
+				cout << "Enter the number " << i + 1 << "element" << endl;
+				cin >> temp_element;
+				attr[i] = temp_element;
+			}
+			*/
+
+		}
+
+		// Update attribute option
+		else if (user_opt == 5) {
+			string sql_query, temp, usr_tbl, usr_attr, usr_id, usr_update; // inputs from user
+			cin.ignore();	// clears pending cin buffer
+			cout << "Which table would you like to update?" << endl;
+			getline(cin, usr_tbl);
+			sql_query = "UPDATE " + usr_tbl;
+			cout << "What is the element you would like to change?" << endl;
+			getline(cin, usr_attr);
+			cout << "What do you want to change it to?" << endl;
+			getline(cin, usr_update);
+			cout << "Is the element a TEXT or INTEGER?" << endl;
+			getline(cin, temp);
+			// if text use single quotes else don't
+			if (temp == "INTEGER") {
+				sql_query = sql_query + " SET " + usr_attr + " = " + usr_update;
+			}
+			else if (temp == "TEXT") {
+				sql_query = sql_query + " SET " + usr_attr + " = " + "'" + usr_update + "'";
+			}
+			cout << "What is the CRN/ID of the object you would like to change?" << endl;
+			getline(cin, usr_id);
+			// checks if table is courses since it is the only table without ID as primary key
+			if (usr_tbl == "COURSES") {
+				sql_query = sql_query + " WHERE CRN = " + usr_id + ";";
+			}
+			else {
+				sql_query = sql_query + " WHERE ID = " + usr_id + ";";
+			}
+			// prints final sql_query string
+			cout << sql_query << endl;
+			exit = sqlite3_exec(DB, sql_query.c_str(), NULL, 0, &messageError);	// calls callback since there could be multiple rows
+
+			if (exit != SQLITE_OK)
+			{
+				std::cerr << "Error" << std::endl;
+				sqlite3_free(messageError);
+			}
+			else {
+				cout << "Success" << std::endl;
+			}
+		}
+		// Delete object option
+		else if (user_opt == 6) {
+			string usr_tbl, usr_id;	// user inputs
+			string sql_query; // final sql_query
+			cin.ignore();	// clears pending cin buffer
+			cout << "Which table would you like to delete from?" << endl;
+			getline(cin, usr_tbl);
+			sql_query = "DELETE FROM " + usr_tbl;
+			cout << "What is the ID/CRN of the object you want to delete" << endl;
+			getline(cin, usr_id);
+			if (usr_tbl == "COURSES") {
+				sql_query = sql_query + " WHERE CRN = " + usr_id + ";";
+			}
+			else {
+				sql_query = sql_query + " WHERE ID = " + usr_id + ";";
+			}
+			cout << sql_query << endl;
+			exit = sqlite3_exec(DB, sql_query.c_str(), NULL, 0, &messageError);	// calls callback since there could be multiple rows
+
+			if (exit != SQLITE_OK)
+			{
+				std::cerr << "Error" << std::endl;
+				sqlite3_free(messageError);
+			}
+			else {
+				cout << "Success" << std::endl;
+			}
+		}
+		else {
+			cout << "Invalid Choice!" << endl;
 		}
 	}
 	/*Call command course queries the database for the list of class names and corresponding times*/
