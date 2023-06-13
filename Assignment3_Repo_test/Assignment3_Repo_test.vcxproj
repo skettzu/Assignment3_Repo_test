@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\huangd8\source\repos\Assignment3_Repo_test\Assignment3_Repo_test</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\99dwo\source\repos\Assignment3_Repo_test\Assignment3_Repo_test</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>sqlite3.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\huangd8\source\repos\Assignment3_Repo_test\Assignment3_Repo_test</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\99dwo\source\repos\Assignment3_Repo_test\Assignment3_Repo_test</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
