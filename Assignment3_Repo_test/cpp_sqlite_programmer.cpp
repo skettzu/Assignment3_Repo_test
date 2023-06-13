@@ -135,11 +135,75 @@ int main(int argc, char** argv)
 			*/
 
 		}
+		// Update attribute option
 		else if (user_opt == 5) {
+			string sql_query, temp, usr_tbl, usr_attr, usr_id, usr_update; // inputs from user
+			cin.ignore();	// clears pending cin buffer
+			cout << "Which table would you like to update?" << endl;
+			getline(cin, usr_tbl);
+			sql_query = "UPDATE " + usr_tbl;
+			cout << "What is the element you would like to change?" << endl;
+			getline(cin, usr_attr);
+			cout << "What do you want to change it to?" << endl;
+			getline(cin, usr_update);
+			cout << "Is the element a TEXT or INTEGER?" << endl;
+			getline(cin, temp);
+			// if text use single quotes else don't
+			if (temp == "INTEGER") {
+				sql_query = sql_query + " SET " + usr_attr + " = " + usr_update;
+			}
+			else if (temp == "TEXT") {
+				sql_query = sql_query + " SET " + usr_attr + " = " + "'" + usr_update + "'";
+			}
+			cout << "What is the CRN/ID of the object you would like to change?" << endl;
+			getline(cin, usr_id);
+			// checks if table is courses since it is the only table without ID as primary key
+			if (usr_tbl == "COURSES") {
+				sql_query = sql_query + " WHERE CRN = " + usr_id + ";";
+			}
+			else {
+				sql_query = sql_query + " WHERE ID = " + usr_id + ";";
+			}
+			// prints final sql_query string
+			cout << sql_query << endl;
+			exit = sqlite3_exec(DB, sql_query.c_str(), NULL, 0, &messageError);	// calls callback since there could be multiple rows
 
+			if (exit != SQLITE_OK)
+			{
+				std::cerr << "Error" << std::endl;
+				sqlite3_free(messageError);
+			}
+			else {
+				cout << "Success" << std::endl;
+			}
 		}
+		// Delete object option
 		else if (user_opt == 6) {
+			string usr_tbl, usr_id;	// user inputs
+			string sql_query; // final sql_query
+			cin.ignore();	// clears pending cin buffer
+			cout << "Which table would you like to delete from?" << endl;
+			getline(cin, usr_tbl);
+			sql_query = "DELETE FROM " + usr_tbl;
+			cout << "What is the ID/CRN of the object you want to delete" << endl;
+			getline(cin, usr_id);
+			if (usr_tbl == "COURSES") {
+				sql_query = sql_query + " WHERE CRN = " + usr_id +";";
+			}
+			else {
+				sql_query = sql_query + " WHERE ID = " + usr_id +";";
+			}
+			cout << sql_query << endl;
+			exit = sqlite3_exec(DB, sql_query.c_str(), NULL, 0, &messageError);	// calls callback since there could be multiple rows
 
+			if (exit != SQLITE_OK)
+			{
+				std::cerr << "Error" << std::endl;
+				sqlite3_free(messageError);
+			}
+			else {
+				cout << "Success" << std::endl;
+			}
 		}
 		else {
 			cout << "Invalid Choice!" << endl;
