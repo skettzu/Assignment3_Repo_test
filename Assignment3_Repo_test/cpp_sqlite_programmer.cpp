@@ -123,10 +123,11 @@ int main(int argc, char** argv)
 			}
 			else if (insert_opt == 3) {
 				string id, prof_name, surname, title, hire_year, dept, email;
+				cout << "Enter ID, Name, Surname, Hire Year, Department and Email of the Instructor seperated by spaces:" << endl;
+				cin >> id >> prof_name >> surname >> hire_year >> dept >> email;
+				cout << "Enter your Title: " << endl;
 				cin.ignore();
-				cout << "Enter ID, Name, Surname, Title, Hire Year, Department and Email of the Instructor seperated by spaces:" << endl;
-				cin >> id >> prof_name >> surname >> title >> hire_year >> dept >> email;
-
+				getline(cin, title);
 				string profInsert = ("INSERT INTO INSTRUCTOR VALUES(" + id + ", '" + prof_name + "', '" + surname + "', '" + title + "', " + hire_year + ", '" + dept + "', '" + email + "');");
 				cout << profInsert << endl;
 				sqlite3_exec(DB, profInsert.c_str(), callback, NULL, NULL);
