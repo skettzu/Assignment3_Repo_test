@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 				cout << "Enter CRN, course name, department, time, day, semester, year and credit" << endl;
 				cin >> CRN >> course_name >> dept >> time >> day >> semester >> year >> credit;
 
-				string courseInsert = ("INSERT INTO COURSES VALUES(" + CRN + ",'" + course_name + "','" + dept + "'," + time + ",'" + day + "'," + semester + "," + year + "," + credit + ");");
+				string courseInsert = ("INSERT INTO COURSES VALUES(" + CRN + ",'" + course_name + "','" + dept + "'," + time + ",'" + day + "','" + semester + "'," + year + "," + credit + ");");
 				//cout << courseInsert << endl;
 				sqlite3_exec(DB, courseInsert.c_str(), callback, NULL, NULL);
 			}
